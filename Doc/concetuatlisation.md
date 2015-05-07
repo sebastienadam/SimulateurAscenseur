@@ -18,8 +18,12 @@ Les ascenseurs peuvent avoir différents états:
 * En descente
 * Bloqué
 
-Les ascenseurs auront une capacité maximale et un nombre d'occupant.
+Les ascenseurs auront une capacité maximale et un nombre d'occupants. Il aura également une liste d'étages de destination.
 
 La destination de l'ascenseur est déterminée par les appels des étages et la destination des personnes présentes dans l'ascenseur.
 
-Un contrôleur va gérer les ascenseurs. Il vérifie si un ascenseur est en route vers les étages où des personnes sont en attente.
+### Le contrôleur
+
+Un contrôleur va gérer les ascenseurs. Lorsqu'un bouton d'appel est activé sur un étage, le contrôleur va vérifier qu'un ascenseur est en route pour cet étage. Cela se fera en ajoutant une destination à un des ascenseur et en changeant éventuellement son état.
+
+À intervalles réguliers il donnera l'ordre d'action aux ascenseurs. Suivant l'état de ces derniers l'ascenseur montera, descendra ou restera à son étage. Si l'ascenseur est arrivé à destination, il chargera et déchargera les personnes.
