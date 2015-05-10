@@ -57,3 +57,6 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+/LiftSimulator/nbproject/private/
+/LiftSimulator/build/
+/LiftSimulator/dist/
