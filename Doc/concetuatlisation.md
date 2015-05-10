@@ -16,6 +16,7 @@ Les ascenseurs peuvent avoir différents états:
 * En attente
 * En montée
 * En descente
+* À destination
 * Bloqué
 
 Les ascenseurs auront une capacité maximale et un nombre d'occupants. Il aura également une liste d'étages de destination.
