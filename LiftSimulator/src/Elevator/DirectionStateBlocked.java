@@ -2,9 +2,12 @@ package Elevator;
 
 class DirectionStateBlocked extends DirectionState {
 
-    @Override
-    public boolean IsBlocked() {
-        return true;     }
-    
-    
+  public DirectionStateBlocked(Elevator elevator) {
+    super(elevator);
+  }
+
+  @Override
+  public boolean IsBlocked() {
+    return true;
+  }
 }

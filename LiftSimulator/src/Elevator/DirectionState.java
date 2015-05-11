@@ -1,11 +1,18 @@
 package Elevator;
 
+import Floor.Floor;
+
 abstract class DirectionState implements IDirectionState {
-  private Elevator concernedElevator;
-  private DirectionType direction;
+  protected Elevator elevator;
+
+  public DirectionState(Elevator elevator) {
+    this.elevator = elevator;
+  }
 
   @Override
-  public void Act() {}
+  public void Act() {
+    setDirection();
+  }
   
   @Override
   public boolean IsBlocked() {
@@ -13,5 +20,7 @@ abstract class DirectionState implements IDirectionState {
   }
   
   @Override
-  public void setDestination(DirectionType direction) {}
+  public void setDestination(Floor floor) {}
+  
+  protected void setDirection() {}
 }
