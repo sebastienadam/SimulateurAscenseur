@@ -15,6 +15,26 @@ class RandomElevatorSelector implements IElevatorSelector {
 
   @Override
   public void SendToFloor(ArrayList<Elevator> elevators, Floor floor, DirectionType direction) {
-    throw new UnsupportedOperationException("Not supported yet.");
+    boolean allBlocked = true;
+    Elevator selectedElevator;
+    int selectedIndex;
+    for (Elevator elevator : elevators) {
+      if (!elevator.isBlocked()) {
+        allBlocked = false;
+        break;
+      }
+    }
+    if (allBlocked) {
+      throw new UnsupportedOperationException("All elevators are blocked! please use stairs.");
+    }
+    selectedIndex = random.nextInt(elevators.size());
+    selectedElevator = elevators.get(selectedIndex);
+    while (selectedElevator.isBlocked()) {      
+      selectedIndex++;
+      if (selectedIndex >= elevators.size()) {
+        selectedIndex = 0;
+      }
+    }
+    selectedElevator.setDestination(floor);
   }
 }
