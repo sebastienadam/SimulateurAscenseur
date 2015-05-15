@@ -1,5 +1,6 @@
 package ElevatorController;
 
+import Common.DirectionType;
 import Elevator.Elevator;
 import Floor.Floor;
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ public class ElevatorController {
     }
   }
   
-  public void requestElevator(Floor floor) {
+  public void requestElevator(Floor floor, DirectionType direction) {
     throw new UnsupportedOperationException("Not supported yet.");
   }
   
