@@ -10,4 +10,9 @@ class DirectionStateBlocked extends DirectionState {
   public boolean IsBlocked() {
     return true;
   }
+  
+  @Override
+  protected void setDirection() {
+    throw new IllegalStateException("Elevator is blocked!");
+  }
 }

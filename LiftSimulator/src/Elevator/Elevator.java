@@ -6,11 +6,11 @@ import Floor.Floor;
 import java.util.ArrayList;
 
 public class Elevator {
-  private DirectionState directionStateBlocked;
-  private DirectionState directionStateDestination;
-  private DirectionState directionStateDown;
-  private DirectionState directionStateUp;
-  private DirectionState directionStateWaiting;
+  private final DirectionState directionStateBlocked;
+  private final DirectionState directionStateDestination;
+  private final DirectionState directionStateDown;
+  private final DirectionState directionStateUp;
+  private final DirectionState directionStateWaiting;
   
   private final int capacity;
   private int currentLevel;
@@ -80,12 +80,35 @@ public class Elevator {
     return totalStop;
   }
 
+  public int goDown() {
+    if(isOnFloor()) {
+      throw new IndexOutOfBoundsException("Elevator on floor");
+    }
+    currentLevel--;
+    return currentLevel;
+  }
+
+  public int goUp() {
+    if(isOnTop()) {
+      throw new IndexOutOfBoundsException("Elevator on top");
+    }
+    currentLevel++;
+    return currentLevel;
+  }
   public boolean isBlocked() {
     return directionState.IsBlocked();
   }
 
   public boolean isInDestination() {
     return destinations[currentLevel] != null;
+  }
+
+  public boolean isOnTop() {
+    return currentLevel == (destinations.length - 1);
+  }
+
+  public boolean isOnFloor() {
+    return currentLevel == 0;
   }
 
   void removePassengers(int level) {
