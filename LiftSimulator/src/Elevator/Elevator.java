@@ -37,11 +37,15 @@ public class Elevator {
   }
   
   public void act() {
-    directionState.Act();
+    directionState.act();
   }
   
   void addPassenger(Person person) {
     throw new UnsupportedOperationException("Not supported yet.");
+  }
+
+  public void block() {
+    directionState = directionStateBlocked;
   }
 
   public int getCapacity() {
@@ -58,6 +62,26 @@ public class Elevator {
 
   public DirectionType getDirection() {
     return direction;
+  }
+
+  DirectionState getDirectionStateBlocked() {
+    return directionStateBlocked;
+  }
+
+  DirectionState getDirectionStateDown() {
+    return directionStateDown;
+  }
+
+  DirectionState getDirectionStateDestination() {
+    return directionStateDestination;
+  }
+
+  DirectionState getDirectionStateUp() {
+    return directionStateUp;
+  }
+
+  DirectionState getDirectionStateWaiting() {
+    return directionStateWaiting;
   }
   
   public int getNbPassengers() {
@@ -132,8 +156,16 @@ public class Elevator {
   void setDirection(DirectionType direction) {
     this.direction = direction;
   }
+
+  void setDirectionState(DirectionState directionState) {
+    this.directionState = directionState;
+  }
   
   public void setDestination(Floor floor) {
     directionState.setDestination(floor);
+  }
+  
+  public void unBlock() {
+    directionState = directionStateWaiting;
   }
 }

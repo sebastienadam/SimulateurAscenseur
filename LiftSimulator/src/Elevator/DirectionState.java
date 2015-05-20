@@ -8,22 +8,19 @@ abstract class DirectionState {
 
   protected Elevator elevator;
 
-  public DirectionState(Elevator elevator) {
+  DirectionState(Elevator elevator) {
     this.elevator = elevator;
   }
 
-  public void Act() {
-    setDirection();
+  void act() {
   }
 
-  public boolean IsBlocked() {
+  boolean IsBlocked() {
     return false;
   }
 
-  public void setDestination(Floor floor) {
-  }
-
-  protected void setDirection() {
+  void setDestination(Floor floor) {
+    elevator.getDestinations()[floor.getLevel()] = floor;
   }
 
   protected boolean hasMoreDestinations(DirectionType direction) {
@@ -42,7 +39,7 @@ abstract class DirectionState {
         nextDestinations = Arrays.copyOfRange(elevator.getDestinations(), elevator.getCurrentLevel() + 1, elevator.getDestinations().length);
       }
     } else {
-      throw new IllegalArgumentException("direction must be Up or Down");
+      throw new IllegalArgumentException("Direction must be Up or Down");
     }
     result = false;
     if (nextDestinations != null) {
