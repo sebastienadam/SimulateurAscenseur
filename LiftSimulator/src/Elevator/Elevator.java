@@ -14,16 +14,17 @@ public class Elevator {
   
   private final int capacity;
   private int currentLevel;
-  private final Floor[] destinations;
+  private final boolean[] destinations;
   private DirectionType direction;
   private DirectionState directionState;
+  private final Floor[] floors;
   private final ArrayList<Person> passengers;
   private int totalDistance;
   private int totalPersonsDown;
   private int totalPersonUp;
   private int totalStop;
 
-  public Elevator(int nbFloors) {
+  public Elevator(Floor[] floors) {
     directionStateBlocked = new DirectionStateBlocked(this);
     directionStateDestination = new DirectionStateDestination(this);
     directionStateDown = new DirectionStateDown(this);
@@ -31,7 +32,8 @@ public class Elevator {
     directionStateWaiting = new DirectionStateWaiting(this);
 
     this.capacity = 12;
-    destinations = new Floor[nbFloors];
+    destinations = new boolean[floors.length];
+    this.floors = floors;
     passengers = new ArrayList<>();
     reset();
   }
@@ -41,7 +43,8 @@ public class Elevator {
   }
   
   void addPassenger(Person person) {
-    throw new UnsupportedOperationException("Not supported yet.");
+    setDestination(person.getDestination());
+    passengers.add(person);
   }
 
   public void block() {
@@ -56,7 +59,7 @@ public class Elevator {
     return currentLevel;
   }
 
-  Floor[] getDestinations() {
+  boolean[] getDestinations() {
     return destinations;
   }
 
@@ -83,9 +86,17 @@ public class Elevator {
   DirectionState getDirectionStateWaiting() {
     return directionStateWaiting;
   }
+
+  public Floor[] getFloors() {
+    return floors;
+  }
   
   public int getNbPassengers() {
     return passengers.size();
+  }
+
+  public ArrayList<Person> getPassengers() {
+    return passengers;
   }
 
   public int getTotalDistance() {
@@ -109,6 +120,7 @@ public class Elevator {
       throw new IndexOutOfBoundsException("Elevator on floor");
     }
     currentLevel--;
+    totalDistance++;
     return currentLevel;
   }
 
@@ -117,6 +129,7 @@ public class Elevator {
       throw new IndexOutOfBoundsException("Elevator on top");
     }
     currentLevel++;
+    totalDistance++;
     return currentLevel;
   }
   public boolean isBlocked() {
@@ -124,7 +137,7 @@ public class Elevator {
   }
 
   public boolean isInDestination() {
-    return destinations[currentLevel] != null;
+    return destinations[currentLevel];
   }
 
   public boolean isOnTop() {
@@ -142,7 +155,7 @@ public class Elevator {
   public final void reset() {
     currentLevel = 0;
     for (int i = 0; i < destinations.length; i++) {
-      destinations[i] = null;
+      destinations[i] = false;
     }
     direction = DirectionType.Stopped;
     directionState = directionStateWaiting;
@@ -161,8 +174,8 @@ public class Elevator {
     this.directionState = directionState;
   }
   
-  public void setDestination(Floor floor) {
-    directionState.setDestination(floor);
+  public void setDestination(int level) {
+    directionState.setDestination(level);
   }
   
   public void unBlock() {

@@ -19,12 +19,12 @@ abstract class DirectionState {
     return false;
   }
 
-  void setDestination(Floor floor) {
-    elevator.getDestinations()[floor.getLevel()] = floor;
+  void setDestination(int level) {
+    elevator.getDestinations()[level] = true;
   }
 
   protected boolean hasMoreDestinations(DirectionType direction) {
-    Floor[] nextDestinations;
+    boolean[] nextDestinations;
     boolean result;
     if (direction == DirectionType.Down) {
       if (elevator.isOnFloor()) {
@@ -43,8 +43,8 @@ abstract class DirectionState {
     }
     result = false;
     if (nextDestinations != null) {
-      for (Floor destination : nextDestinations) {
-        if (destination != null) {
+      for (boolean destination : nextDestinations) {
+        if (destination) {
           result = true;
           break;
         }

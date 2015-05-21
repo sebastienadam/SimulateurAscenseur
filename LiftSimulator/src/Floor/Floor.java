@@ -27,7 +27,7 @@ public class Floor {
       throw new IllegalArgumentException("Destination cannot be the floor itself");
     } else {
       waitingPersons.add(newPerson);
-      elevatorController.requestElevator(this, getDirection(newPerson.getDestination()));
+      elevatorController.requestElevator(level, getDirection(newPerson.getDestination()));
     }
   }
 

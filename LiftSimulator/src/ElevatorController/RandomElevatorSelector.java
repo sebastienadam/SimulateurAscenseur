@@ -14,7 +14,7 @@ class RandomElevatorSelector implements IElevatorSelector {
   }
 
   @Override
-  public void SendToFloor(ArrayList<Elevator> elevators, Floor floor, DirectionType direction) {
+  public void SendToFloor(ArrayList<Elevator> elevators, int level, DirectionType direction) {
     boolean allBlocked = true;
     Elevator selectedElevator;
     int selectedIndex;
@@ -35,6 +35,6 @@ class RandomElevatorSelector implements IElevatorSelector {
         selectedIndex = 0;
       }
     }
-    selectedElevator.setDestination(floor);
+    selectedElevator.setDestination(level);
   }
 }
