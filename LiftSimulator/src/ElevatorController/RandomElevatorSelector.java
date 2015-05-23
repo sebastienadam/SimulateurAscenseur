@@ -29,7 +29,7 @@ class RandomElevatorSelector implements IElevatorSelector {
     }
     selectedIndex = random.nextInt(elevators.size());
     selectedElevator = elevators.get(selectedIndex);
-    while (selectedElevator.isBlocked()) {      
+    while (selectedElevator.isBlocked() && (selectedElevator.getCurrentLevel() != level)) {      
       selectedIndex++;
       if (selectedIndex >= elevators.size()) {
         selectedIndex = 0;

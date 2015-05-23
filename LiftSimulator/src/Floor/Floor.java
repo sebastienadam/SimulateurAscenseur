@@ -4,6 +4,7 @@ import Common.Person;
 import Common.DirectionType;
 import ElevatorController.ElevatorController;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Floor {
 
@@ -27,7 +28,13 @@ public class Floor {
       throw new IllegalArgumentException("Destination cannot be the floor itself");
     } else {
       waitingPersons.add(newPerson);
-      elevatorController.requestElevator(level, getDirection(newPerson.getDestination()));
+      DirectionType newPersonDirection = getDirection(newPerson.getDestination());
+      if(newPersonDirection == DirectionType.Down) {
+        callDown = true;
+      } else {
+        callUp = true;
+      }
+      elevatorController.requestElevator(level, newPersonDirection);
     }
   }
 
@@ -48,6 +55,7 @@ public class Floor {
       throw new IllegalArgumentException("Destination cannot be the floor itself");
     }
   }
+
   public int getLevel() {
     return level;
   }
@@ -73,17 +81,28 @@ public class Floor {
       throw new IllegalArgumentException("max cannot be negative");
     } else {
       ArrayList<Person> returnedList = new ArrayList<>();
-      for (Person waitingPerson : waitingPersons) {
+      for (Iterator<Person> iterator = waitingPersons.iterator(); iterator.hasNext();) {
+        Person waitingPerson = iterator.next();
         if (returnedList.size() >= max) {
           break;
         }
         if ((direction == DirectionType.Down) && (waitingPerson.getDestination() < level)) {
           returnedList.add(waitingPerson);
-          waitingPersons.remove(waitingPerson);
+          iterator.remove();
         } else if ((direction == DirectionType.Up) && (waitingPerson.getDestination() > level)) {
           returnedList.add(waitingPerson);
-          waitingPersons.remove(waitingPerson);
+          iterator.remove();
         }
+      }
+      if (getNbWaitingPersonsDown() == 0) {
+        callDown = false;
+      } else if (direction == DirectionType.Down) {
+        elevatorController.requestElevator(level, direction);
+      }
+      if (getNbWaitingPersonsUp() == 0) {
+        callUp = false;
+      } else if (direction == DirectionType.Up) {
+        elevatorController.requestElevator(level, direction);
       }
       return returnedList;
     }
