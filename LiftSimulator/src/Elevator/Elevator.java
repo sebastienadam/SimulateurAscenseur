@@ -87,7 +87,7 @@ public class Elevator {
     return directionStateWaiting;
   }
 
-  public Floor[] getFloors() {
+  Floor[] getFloors() {
     return floors;
   }
   
@@ -95,7 +95,7 @@ public class Elevator {
     return passengers.size();
   }
 
-  public ArrayList<Person> getPassengers() {
+  ArrayList<Person> getPassengers() {
     return passengers;
   }
 
@@ -115,7 +115,7 @@ public class Elevator {
     return totalStop;
   }
 
-  public int goDown() {
+  int goDown() {
     if(isOnFloor()) {
       throw new IndexOutOfBoundsException("Elevator on floor");
     }
@@ -124,7 +124,7 @@ public class Elevator {
     return currentLevel;
   }
 
-  public int goUp() {
+  int goUp() {
     if(isOnTop()) {
       throw new IndexOutOfBoundsException("Elevator on top");
     }
@@ -136,6 +136,10 @@ public class Elevator {
     return directionState.IsBlocked();
   }
 
+  public boolean isDestination(int level) {
+    return destinations[level];
+  }
+  
   public boolean isInDestination() {
     return destinations[currentLevel];
   }

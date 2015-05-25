@@ -72,9 +72,8 @@ public class FloorTest {
    */
   @Test
   public void testGetCallDownInit() {
-    boolean expResult = false;
     boolean result = floor.getCallDown();
-    assertEquals(expResult, result);
+    assertFalse(result);
   }
 
   /**
@@ -82,10 +81,9 @@ public class FloorTest {
    */
   @Test
   public void testGetCallDownAddPersonDown() {
-    boolean expResult = true;
     floor.addPerson(new Person("Pat",0));
     boolean result = floor.getCallDown();
-    assertEquals(expResult, result);
+    assertTrue(result);
   }
 
   /**
@@ -93,9 +91,8 @@ public class FloorTest {
    */
   @Test
   public void testGetCallUpInit() {
-    boolean expResult = false;
     boolean result = floor.getCallUp();
-    assertEquals(expResult, result);
+    assertFalse(result);
   }
 
   /**
@@ -103,10 +100,9 @@ public class FloorTest {
    */
   @Test
   public void testGetCallUpAddPersonUp() {
-    boolean expResult = true;
     floor.addPerson(new Person("Pat",4));
     boolean result = floor.getCallUp();
-    assertEquals(expResult, result);
+    assertTrue(result);
   }
 
   /**
@@ -232,5 +228,4 @@ public class FloorTest {
     assertEquals(0, floor.getNbWaitingPersonsDown());
     assertEquals(0, floor.getNbWaitingPersonsUp());
   }
-  
 }

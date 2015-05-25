@@ -2,7 +2,6 @@ package ElevatorController;
 
 import Common.DirectionType;
 import Elevator.Elevator;
-import Floor.Floor;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -16,6 +15,7 @@ class RandomElevatorSelector implements IElevatorSelector {
   @Override
   public void SendToFloor(ArrayList<Elevator> elevators, int level, DirectionType direction) {
     boolean allBlocked = true;
+    int tryCount;
     Elevator selectedElevator;
     int selectedIndex;
     for (Elevator elevator : elevators) {
@@ -25,14 +25,19 @@ class RandomElevatorSelector implements IElevatorSelector {
       }
     }
     if (allBlocked) {
-      throw new UnsupportedOperationException("All elevators are blocked! please use stairs.");
+      throw new UnsupportedOperationException("All elevators are blocked! Please use stairs.");
     }
     selectedIndex = random.nextInt(elevators.size());
     selectedElevator = elevators.get(selectedIndex);
-    while (selectedElevator.isBlocked() && (selectedElevator.getCurrentLevel() != level)) {      
+    tryCount = 0;
+    while (selectedElevator.isBlocked() || (selectedElevator.getCurrentLevel() == level)) {      
       selectedIndex++;
       if (selectedIndex >= elevators.size()) {
         selectedIndex = 0;
+      }
+      tryCount++;
+      if(tryCount >= elevators.size()) {
+        throw new IllegalStateException("No elevator for this floor. Try again later.");
       }
     }
     selectedElevator.setDestination(level);
