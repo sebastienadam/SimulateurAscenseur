@@ -9,11 +9,7 @@ import Common.DirectionType;
 import Common.Person;
 import ElevatorController.ElevatorController;
 import Floor.Floor;
-import java.util.ArrayList;
-import org.jmock.Mockery;
 import org.jmock.auto.Mock;
-import org.jmock.integration.junit4.JUnit4Mockery;
-import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -61,12 +57,119 @@ public class ElevatorTest {
    * Test of act method, of class Elevator.
    */
   @Test
-  public void testAct() {
-    System.out.println("act");
-    Elevator instance = null;
-    instance.act();
-    // TODO review the generated test code and remove the default call to fail.
-    fail("The test case is a prototype.");
+  public void testDirectionStateInit() {
+    DirectionState expResult = elevator.getDirectionStateWaiting();
+    DirectionState result = elevator.getDirectionState();
+    assertEquals(expResult, result);
+  }
+
+  /**
+   * Test of act method, of class Elevator.
+   */
+  @Test
+  public void testActInitUp() {
+    DirectionState expResult;
+    DirectionState result;
+    elevator.setDestination(2);
+    elevator.act();
+    expResult = elevator.getDirectionStateUp();
+    result = elevator.getDirectionState();
+    assertEquals(expResult, result);
+  }
+
+  /**
+   * Test of act method, of class Elevator.
+   */
+  @Test
+  public void testActUpped() {
+    int expResult;
+    int result;
+    elevator.setDestination(2);
+    elevator.act();
+    elevator.act();
+    expResult = 1;
+    result = elevator.getCurrentLevel();
+    assertEquals(expResult, result);
+  }
+
+  /**
+   * Test of act method, of class Elevator.
+   */
+  @Test
+  public void testActUpDestination() {
+    elevator.setDestination(2);
+    elevator.act();
+    elevator.act();
+    elevator.act();
+    assertEquals(2, elevator.getCurrentLevel());
+    assertEquals(elevator.getDirectionStateDestination(), elevator.getDirectionState());
+  }
+
+  /**
+   * Test of act method, of class Elevator.
+   */
+  @Test
+  public void testActUpDestinationWaiting() {
+    elevator.setDestination(2);
+    elevator.act();
+    elevator.act();
+    elevator.act();
+    elevator.act();
+    assertEquals(2, elevator.getCurrentLevel());
+    assertEquals(elevator.getDirectionStateWaiting(), elevator.getDirectionState());
+  }
+
+  /**
+   * Test of act method, of class Elevator.
+   */
+  @Test
+  public void testActDestinationRemovePassenger() {
+    int level = 2;
+    elevator.addPassenger(new Person("Pat", level));
+    elevator.addPassenger(new Person("Pat", level));
+    do {
+      elevator.act();
+    } while (!elevator.isWaiting());
+    assertEquals(level, elevator.getCurrentLevel());
+    assertEquals(0, elevator.getNbPassengers());
+  }
+
+  /**
+   * Test of act method, of class Elevator.
+   */
+  @Test
+  public void testActUpDown() {
+    int level1 = 3;
+    int level2 = 1;
+    elevator.setDestination(level1);
+    do {
+      elevator.act();
+//      System.out.println("L"+elevator.getCurrentLevel()+" - "+elevator.getDirectionState().getClass().getName());
+      if(elevator.isInDestination()) {
+        elevator.setDestination(level2);
+      }
+    } while (!elevator.isWaiting());
+    assertEquals(level2, elevator.getCurrentLevel());
+  }
+
+  /**
+   * Test of act method, of class Elevator.
+   */
+  @Test
+  public void testActUpDownUp() {
+    int idx = 0;
+    int level[] = {2,1,3};
+    elevator.setDestination(level[idx]);
+    idx++;
+    do {
+      elevator.act();
+//      System.out.println("L"+elevator.getCurrentLevel()+" - "+elevator.getDirectionState().getClass().getName());
+      if(elevator.isInDestination() && idx < level.length) {
+        elevator.setDestination(level[idx]);
+        idx++;
+      }
+    } while (!elevator.isWaiting());
+    assertEquals(level[idx-1], elevator.getCurrentLevel());
   }
 
   /**
@@ -222,15 +325,19 @@ public class ElevatorTest {
    */
   @Test
   public void testGetTotalStop() {
-    fail("Act doesn't work! test it before");
-    elevator.setDestination(1);
-    elevator.setDestination(2);
+    int idx = 0;
+    int level[] = {2,1,3};
+    elevator.setDestination(level[idx]);
+    idx++;
     do {
       elevator.act();
-    } while (elevator.isWaiting());
-    int expResult = 2;
-    int result = elevator.getTotalStop();
-    assertEquals(expResult, result);
+      System.out.println("L"+elevator.getCurrentLevel()+" - "+elevator.getDirectionState().getClass().getName());
+      if(elevator.isInDestination() && idx < level.length) {
+        elevator.setDestination(level[idx]);
+        idx++;
+      }
+    } while (!elevator.isWaiting());
+    assertEquals(3, elevator.getTotalStop());
   }
 
   /**
@@ -359,12 +466,20 @@ public class ElevatorTest {
    */
   @Test
   public void testRemovePassengers() {
-    System.out.println("removePassengers");
-    int level = 0;
-    Elevator instance = null;
-    instance.removePassengers(level);
-    // TODO review the generated test code and remove the default call to fail.
-    fail("The test case is a prototype.");
+    int expResult;
+    int result;
+    int level = 2;
+    elevator.addPassenger(new Person("Pat", level));
+    elevator.addPassenger(new Person("Pat", level));
+    elevator.addPassenger(new Person("Pat", level + 1));
+    elevator.addPassenger(new Person("Pat", level - 1));
+    expResult = 4;
+    result = elevator.getNbPassengers();
+    assertEquals(expResult, result);
+    elevator.removePassengers(level);
+    expResult = 2;
+    result = elevator.getNbPassengers();
+    assertEquals(expResult, result);
   }
 
   /**
@@ -372,37 +487,27 @@ public class ElevatorTest {
    */
   @Test
   public void testReset() {
-    System.out.println("reset");
-    Elevator instance = null;
-    instance.reset();
-    // TODO review the generated test code and remove the default call to fail.
-    fail("The test case is a prototype.");
-  }
-
-  /**
-   * Test of setDirection method, of class Elevator.
-   */
-  @Test
-  public void testSetDirection() {
-    System.out.println("setDirection");
-    DirectionType direction = null;
-    Elevator instance = null;
-    instance.setDirection(direction);
-    // TODO review the generated test code and remove the default call to fail.
-    fail("The test case is a prototype.");
-  }
-
-  /**
-   * Test of setDestination method, of class Elevator.
-   */
-  @Test
-  public void testSetDestination() {
-    System.out.println("setDestination");
-    int level = 0;
-    Elevator instance = null;
-    instance.setDestination(level);
-    // TODO review the generated test code and remove the default call to fail.
-    fail("The test case is a prototype.");
+    int level = 2;
+    elevator.addPassenger(new Person("Pat", level));
+    elevator.addPassenger(new Person("Pat", level));
+    elevator.setDestination(level + 2);
+    elevator.goUp();
+    elevator.goUp();
+    elevator.goUp();
+    elevator.goDown();
+    elevator.block();
+    elevator.reset();
+    assertTrue(elevator.isOnFloor());
+    assertFalse(elevator.isBlocked());
+    assertFalse(elevator.isDestination(level));
+    assertFalse(elevator.isDestination(level + 2));
+    assertEquals(0, elevator.getCurrentLevel());
+    assertEquals(0, elevator.getNbPassengers());
+    assertEquals(0, elevator.getTotalDistance());
+    assertEquals(0, elevator.getTotalPersonsDown());
+    assertEquals(0, elevator.getTotalPersonsUp());
+    assertEquals(0, elevator.getTotalStop());
+    assertEquals(DirectionType.Stopped, elevator.getDirection());
   }
 
   /**

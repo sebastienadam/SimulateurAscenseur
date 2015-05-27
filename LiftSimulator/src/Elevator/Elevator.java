@@ -4,6 +4,7 @@ import Common.DirectionType;
 import Common.Person;
 import Floor.Floor;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Elevator {
   private final DirectionState directionStateBlocked;
@@ -175,7 +176,12 @@ public class Elevator {
   }
 
   void removePassengers(int level) {
-    throw new UnsupportedOperationException("Not supported yet.");
+    for (Iterator<Person> iterator = passengers.iterator(); iterator.hasNext();) {
+      Person next = iterator.next();
+      if (next.getDestination() == level) {
+        iterator.remove();
+      }
+    }
   }
 
   public final void reset() {
