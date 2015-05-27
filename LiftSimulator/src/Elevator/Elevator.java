@@ -42,9 +42,23 @@ public class Elevator {
     directionState.act();
   }
   
+  void addStop() {
+    totalStop++;
+  }
+  
   void addPassenger(Person person) {
-    setDestination(person.getDestination());
-    passengers.add(person);
+    int destination = person.getDestination();
+    if (destination == currentLevel) {
+      throw new IllegalArgumentException("Passenger cannot go to the current level");
+    } else {
+      setDestination(destination);
+      passengers.add(person);
+      if(destination < currentLevel) {
+        totalPersonsDown++;
+      } else {
+        totalPersonUp++;
+      }
+    }
   }
 
   public void block() {
@@ -65,6 +79,10 @@ public class Elevator {
 
   public DirectionType getDirection() {
     return direction;
+  }
+
+  DirectionState getDirectionState() {
+    return directionState;
   }
 
   DirectionState getDirectionStateBlocked() {
@@ -107,7 +125,7 @@ public class Elevator {
     return totalPersonsDown;
   }
 
-  public int getTotalPersonUp() {
+  public int getTotalPersonsUp() {
     return totalPersonUp;
   }
 
@@ -146,6 +164,10 @@ public class Elevator {
 
   public boolean isOnTop() {
     return currentLevel == (destinations.length - 1);
+  }
+  
+  public boolean isWaiting() {
+    return directionState == directionStateWaiting;
   }
 
   public boolean isOnFloor() {

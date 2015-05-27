@@ -25,15 +25,9 @@ public class RandomElevatorSelectorTest {
 
   private RandomElevatorSelector elevatorSelector;
   @Mock
-  private Floor floor0;
-  @Mock
-  private Floor floor1;
-  @Mock
-  private Floor floor2;
-  @Mock
-  private Floor floor3;
-  @Mock
-  private Floor floor4;
+  private Floor floor;
+  private Floor[] floors;
+  private ArrayList<Elevator> elevators;
 
   public RandomElevatorSelectorTest() {
   }
@@ -49,6 +43,11 @@ public class RandomElevatorSelectorTest {
   @Before
   public void setUp() {
     elevatorSelector = new RandomElevatorSelector();
+    floors = new Floor[]{floor, floor, floor, floor, floor};
+    elevators = new ArrayList<>();
+    for (int i = 0; i < 10; i++) {
+      elevators.add(new Elevator(floors));
+    }
   }
 
   @After
@@ -61,18 +60,13 @@ public class RandomElevatorSelectorTest {
   @Test
   public void testSendToFloor() {
     boolean sent;
-    Floor[] floors = new Floor[]{floor1, floor2, floor3};
-    ArrayList<Elevator> elevators = new ArrayList<>();
-    for (int i = 0; i < 10; i++) {
-      elevators.add(new Elevator(floors));
-    }
     int level = 2;
     DirectionType direction = DirectionType.Down;
     elevatorSelector.SendToFloor(elevators, level, direction);
     sent = false;
     for (Elevator elevator : elevators) {
       if(elevator.isDestination(level)) {
-        System.out.println("Ascenseur envoyé : "+elevators.indexOf(elevator));
+        System.out.println("''testSendToFloor'' Ascenseur envoyé : "+elevators.indexOf(elevator));
         sent = true;
         break;
       }
@@ -85,14 +79,7 @@ public class RandomElevatorSelectorTest {
    */
   @Test(expected = UnsupportedOperationException.class)
   public void testSendToFloorAllBlock() {
-    Elevator elevator;
-    Floor[] floors = new Floor[]{floor0, floor1, floor2, floor3, floor4};
-    ArrayList<Elevator> elevators = new ArrayList<>();
-    for (int i = 0; i < 10; i++) {
-      elevator = new Elevator(floors);
-      elevator.block();
-      elevators.add(elevator);
-    }
+    elevators.stream().forEach(elevator -> elevator.block());
     int level = 2;
     DirectionType direction = DirectionType.Down;
     elevatorSelector.SendToFloor(elevators, level, direction);
@@ -101,14 +88,45 @@ public class RandomElevatorSelectorTest {
   /**
    * Test of SendToFloor method, of class RandomElevatorSelector.
    */
-  @Test(expected = IllegalStateException.class)
-  public void testSendToFloorAlreaddyOnFloor() {
-    Floor[] floors = new Floor[]{floor1, floor2, floor3};
-    ArrayList<Elevator> elevators = new ArrayList<>();
-    for (int i = 0; i < 10; i++) {
-      elevators.add(new Elevator(floors));
-    }
+  @Test
+  public void testSendToFloorAlreaddyOnFloorWaiting() {
+    boolean sent;
     int level = 0;
+    DirectionType direction = DirectionType.Down;
+    elevatorSelector.SendToFloor(elevators, level, direction);
+    sent = false;
+    for (Elevator elevator : elevators) {
+      if(elevator.isDestination(level)) {
+        System.out.println("''testSendToFloorAlreaddyOnFloorWaiting'' Ascenseur envoyé : "+elevators.indexOf(elevator));
+        sent = true;
+        break;
+      }
+    }
+    assertTrue(sent);
+  }
+
+  /**
+   * Test of SendToFloor method, of class RandomElevatorSelector.
+   */
+  @Test(expected = IllegalStateException.class)
+  public void testSendToFloorAlreaddyOnFloorNotWaiting() {
+    int level = 0;
+    DirectionType direction = DirectionType.Down;
+    elevators.stream().map((elevator) -> {
+      elevator.setDestination(2);
+      return elevator;
+    }).forEach(elevator -> {
+      elevator.act();
+    });
+    elevatorSelector.SendToFloor(elevators, level, direction);
+  }
+
+  /**
+   * Test of SendToFloor method, of class RandomElevatorSelector.
+   */
+  @Test(expected = ArrayIndexOutOfBoundsException.class)
+  public void testSendToFloorOutOfBounds() {
+    int level = floors.length;
     DirectionType direction = DirectionType.Down;
     elevatorSelector.SendToFloor(elevators, level, direction);
   }

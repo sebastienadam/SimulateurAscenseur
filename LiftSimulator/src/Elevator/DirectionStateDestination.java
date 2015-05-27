@@ -19,6 +19,9 @@ class DirectionStateDestination extends DirectionState {
     boolean destinations[] = elevator.getDestinations();
     DirectionType currentDirection = elevator.getDirection();
     
+    // on est arrêté, on ajouter au total
+    elevator.addStop();
+    
     // l'étage courant n'est plus une destination
     destinations[currentLevel] = false;
     

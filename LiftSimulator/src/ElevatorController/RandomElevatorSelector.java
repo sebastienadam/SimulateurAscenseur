@@ -18,6 +18,9 @@ class RandomElevatorSelector implements IElevatorSelector {
     int tryCount;
     Elevator selectedElevator;
     int selectedIndex;
+    if((level < 0) || level >= elevators.size()) {
+      throw new ArrayIndexOutOfBoundsException(level);
+    }
     for (Elevator elevator : elevators) {
       if (!elevator.isBlocked()) {
         allBlocked = false;
@@ -30,7 +33,7 @@ class RandomElevatorSelector implements IElevatorSelector {
     selectedIndex = random.nextInt(elevators.size());
     selectedElevator = elevators.get(selectedIndex);
     tryCount = 0;
-    while (selectedElevator.isBlocked() || (selectedElevator.getCurrentLevel() == level)) {      
+    while (selectedElevator.isBlocked() || ((selectedElevator.getCurrentLevel() == level) && (!selectedElevator.isWaiting()))) {      
       selectedIndex++;
       if (selectedIndex >= elevators.size()) {
         selectedIndex = 0;

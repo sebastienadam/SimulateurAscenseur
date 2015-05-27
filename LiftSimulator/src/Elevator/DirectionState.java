@@ -1,7 +1,6 @@
 package Elevator;
 
 import Common.DirectionType;
-import Floor.Floor;
 import java.util.Arrays;
 
 abstract class DirectionState {
